@@ -1,0 +1,15 @@
+sequenceDiagram
+  participant W as Windex (WinUI)
+  participant C as rexcore.dll
+  participant R as rex server
+  W->>C: add_host ssh://you@box
+  C->>R: /api/control (rex.control.v1): hello
+  R-->>C: welcome, sessions, layout
+  C-->>W: MODEL: hosts → sessions → tabs → panes
+  C->>R: /api/data (rex.data.terminal.v1), one per pane
+  R-->>C: Ghostty snapshot, then live PTY bytes
+  Note over C: libghostty-vt parses on a worker thread per pane
+  C-->>W: PANE_DIRTY
+  W->>C: lock the frame, draw the cells with Win2D
+  W->>C: key press
+  C->>R: encoded input

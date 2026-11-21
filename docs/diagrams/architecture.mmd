@@ -1,0 +1,17 @@
+flowchart TB
+  subgraph PC["Your Windows PC"]
+    direction TB
+    subgraph APP["Windex.exe · C# / WinUI 3"]
+      direction LR
+      SHELL["Shell<br/>tabs · sidebar · palette · settings"]
+      VIEW["Terminal view<br/>Win2D cell renderer"]
+    end
+    CORE["rexcore.dll · Rust<br/>Rex protocol · libghostty-vt per pane"]
+    SSH["ssh.exe -L"]
+  end
+  REX["rex server on your box<br/>sessions · tabs · panes · PTYs"]
+  SHELL <-->|"JSON commands / model events"| CORE
+  VIEW <-->|"input / zero-copy frames"| CORE
+  CORE <-->|"WebSocket"| SSH
+  SSH <-->|"Tailscale or SSH, to the server's unix socket"| REX
+  CORE -.->|"or wss:// direct"| REX

@@ -64,75 +64,26 @@ There are two halves. A Rust core (`rexcore.dll`) owns everything protocol- and 
 The WinUI app owns everything pixel- and input-shaped. They talk through a small C ABI: JSON
 commands in, a model of hosts, sessions, tabs and panes out, plus a zero-copy cell buffer for each pane.
 
-```mermaid
-flowchart LR
-  subgraph PC["Your Windows PC"]
-    direction TB
-    subgraph APP["Windex.exe (C# · WinUI 3)"]
-      SHELL["Shell<br/>tabs · sidebar · palette · settings"]
-      VIEW["TerminalView<br/>Win2D renderer"]
-    end
-    CORE["rexcore.dll (Rust)<br/>Rex protocol · libghostty-vt"]
-    SSH["ssh.exe -L"]
-    SHELL <-->|"JSON commands / model events"| CORE
-    VIEW <-->|"input / zero-copy frames"| CORE
-    CORE <-->|"WebSocket"| SSH
-  end
-  subgraph BOX["Your server"]
-    REX["rex server<br/>sessions · tabs · panes · PTYs"]
-  end
-  SSH <-->|"Tailscale / SSH<br/>to the server's unix socket"| REX
-  CORE -.->|"or wss:// direct"| REX
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/media/architecture-dark.svg">
+  <img src="docs/media/architecture-light.svg" alt="Windex.exe (WinUI shell and Win2D terminal view) talks to rexcore.dll over a C ABI; the core reaches the rex server over an ssh -L forward or wss directly">
+</picture>
 
 What happens when you open a pane and start typing:
 
-```mermaid
-sequenceDiagram
-  participant W as Windex (WinUI)
-  participant C as rexcore.dll
-  participant R as rex server
-  W->>C: add_host ssh://you@box
-  C->>R: /api/control (rex.control.v1): hello
-  R-->>C: welcome + sessions and layout
-  C-->>W: MODEL: hosts → sessions → tabs → panes
-  C->>R: /api/data (rex.data.terminal.v1), one per pane
-  R-->>C: Ghostty snapshot, then live PTY bytes
-  Note over C: libghostty-vt parses on a worker thread per pane
-  C-->>W: PANE_DIRTY
-  W->>C: lock frame, draw the cells with Win2D
-  W->>C: key press
-  C->>R: encoded input
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/media/pane-lifecycle-dark.svg">
+  <img src="docs/media/pane-lifecycle-light.svg" alt="Sequence: add host, control channel hello, model to the UI, one data channel per pane, snapshot then PTY bytes, libghostty-vt parses, PANE_DIRTY, Win2D draws, key presses go back as encoded input">
+</picture>
 
 ## Tech stack
 
-```mermaid
-flowchart TB
-  subgraph APP["Windex.exe"]
-    direction TB
-    A1["C# 14 · .NET 10 · self-contained, unpackaged"]
-    A2["WinUI 3 · Windows App SDK 2.7<br/>Mica / Acrylic · Fluent controls"]
-    A3["Win2D 1.4 · DirectWrite<br/>Cascadia Mono + Symbols Nerd Font"]
-    A4["CommunityToolkit<br/>SettingsControls · Segmented · MVVM"]
-  end
-  subgraph CORE["rexcore.dll"]
-    direction TB
-    C1["Rust 1.96 · C ABI (rexcore.h)"]
-    C2["tokio · tokio-tungstenite · rustls"]
-    C3["libghostty-vt via ghostty-vt<br/>built with Zig 0.17"]
-    C4["rexrs: generated Rex API types"]
-  end
-  subgraph NET["Getting to your servers"]
-    direction TB
-    N1["OpenSSH ssh -L<br/>to the server's unix socket"]
-    N2["wss:// direct (Rex HTTPS)"]
-    N3["Tailscale discovery<br/>tailscale status --json"]
-  end
-  APP --> CORE --> NET
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/media/tech-stack-dark.svg">
+  <img src="docs/media/tech-stack-light.svg" alt="Tech stack: Windex.exe on C#/.NET 10, WinUI 3, Win2D, CommunityToolkit; rexcore.dll on Rust, tokio, tungstenite, rustls, libghostty-vt, rexrs; transport over OpenSSH, wss and Tailscale discovery">
+</picture>
 
-If you want the details, I wrote up what I worked out:
+The diagrams are generated from the Mermaid sources in [docs/diagrams](docs/diagrams). If you want the details, I wrote up what I worked out:
 [the protocol](docs/protocol.md), [the core ↔ UI contract](docs/contract.md),
 [core notes](docs/core-notes.md) and [the design spec](docs/design.md).
 

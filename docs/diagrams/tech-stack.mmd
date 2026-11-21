@@ -1,0 +1,25 @@
+flowchart LR
+  subgraph APP["Windex.exe"]
+    direction TB
+    A1["C# 14 · .NET 10<br/>self-contained, unpackaged"]
+    A2["WinUI 3 · Windows App SDK 2.7<br/>Mica · Acrylic · Fluent"]
+    A3["Win2D 1.4 · DirectWrite<br/>Cascadia Mono · Nerd Font symbols"]
+    A4["CommunityToolkit<br/>SettingsControls · Segmented"]
+    A1 --- A2 --- A3 --- A4
+  end
+  subgraph CORE["rexcore.dll"]
+    direction TB
+    C1["Rust 1.96 · C ABI<br/>rexcore.h"]
+    C2["tokio · tokio-tungstenite<br/>rustls"]
+    C3["libghostty-vt<br/>ghostty-vt crate, Zig 0.17"]
+    C4["rexrs<br/>generated Rex API types"]
+    C1 --- C2 --- C3 --- C4
+  end
+  subgraph NET["To your servers"]
+    direction TB
+    N1["OpenSSH ssh -L<br/>to the server's unix socket"]
+    N2["wss:// direct<br/>Rex over HTTPS"]
+    N3["Tailscale discovery<br/>tailscale status --json"]
+    N1 --- N2 --- N3
+  end
+  APP ==> CORE ==> NET
