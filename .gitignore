@@ -1,0 +1,13 @@
+﻿_research/
+**/bin/
+# rexcore-probe lives in core/src/bin (only build output is ignored)
+!core/src/bin/
+**/obj/
+target/
+*.user
+.vs/
+artifacts/
+
+
+# Screenshots of the official Rex app used as design references (kept local)
+docs/reference/

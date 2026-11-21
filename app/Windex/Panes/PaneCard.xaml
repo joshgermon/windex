@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A pane card (design §5, Rex Mac proportions): 12 epx radius, a top-lit hairline, a 36 epx header
+     (program tile, bold title, split right / split down / zoom / more / close), the terminal body
+     with a dim layer, and (focused) a soft shadow drawn behind it in ShadowHost. The header can
+     also float over the body (Pane headers: On hover); PaneCard.xaml.cs moves it. -->
+<UserControl
+    x:Class="Windex.Panes.PaneCard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:shell="using:Windex.Shell"
+    IsTabStop="False">
+
+    <Grid>
+        <Grid x:Name="ShadowHost" IsHitTestVisible="False" />
+        <Border
+            x:Name="Card"
+            BackgroundSizing="InnerBorderEdge"
+            BorderThickness="1"
+            CornerRadius="12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="HeaderRow" Height="36" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid x:Name="Body" Grid.Row="1">
+                    <ContentPresenter x:Name="ContentHost" />
+                </Grid>
+
+                <!-- The dim fades the whole card evenly (as on Rex Mac); the header's own text sits above it. -->
+                <Border
+                    x:Name="Dim"
+                    Grid.RowSpan="2"
+                    Background="{ThemeResource RexPaneDimBrush}"
+                    CornerRadius="11"
+                    IsHitTestVisible="False"
+                    Opacity="0" />
+
+                <Border
+                    x:Name="HeaderSurface"
+                    Background="Transparent"
+                    BorderThickness="0">
+                    <Grid
+                        x:Name="Header"
+                        Padding="12,0,6,0"
+                        Background="Transparent"
+                        DoubleTapped="Header_DoubleTapped">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <shell:ProgramTile
+                            x:Name="Tile"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center"
+                            TileSize="16" />
+
+                        <TextBlock
+                            x:Name="TitleText"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource RexPaneTitleTextStyle}" />
+                        <TextBox
+                            x:Name="RenameBox"
+                            Grid.Column="1"
+                            Margin="-6,0,8,0"
+                            AutomationProperties.Name="Pane name"
+                            FontSize="13"
+                            FontWeight="Bold"
+                            KeyDown="RenameBox_KeyDown"
+                            LostFocus="RenameBox_LostFocus"
+                            Style="{StaticResource RexInlineRenameTextBoxStyle}"
+                            Visibility="Collapsed" />
+
+                        <StackPanel
+                            Grid.Column="2"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"
+                            Spacing="6">
+                            <Border
+                                x:Name="ZoomChip"
+                                Padding="7,1,7,2"
+                                VerticalAlignment="Center"
+                                Background="{ThemeResource RexZoomChipBrush}"
+                                CornerRadius="8"
+                                Visibility="Collapsed">
+                                <TextBlock
+                                    FontSize="11"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="Zoomed" />
+                            </Border>
+                            <TextBlock
+                                x:Name="WordText"
+                                VerticalAlignment="Center"
+                                AutomationProperties.LiveSetting="Polite"
+                                Style="{StaticResource RexActivityWordTextStyle}"
+                                Visibility="Collapsed" />
+                            <HyperlinkButton
+                                x:Name="RetryLink"
+                                Padding="2,0,2,0"
+                                VerticalAlignment="Center"
+                                Click="RetryLink_Click"
+                                Content="Retry"
+                                FontSize="12"
+                                Visibility="Collapsed" />
+                        </StackPanel>
+
+                        <ProgressBar
+                            x:Name="Progress"
+                            Grid.Column="3"
+                            Width="48"
+                            Height="3"
+                            MinHeight="3"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            CornerRadius="1.5"
+                            Visibility="Collapsed" />
+
+                        <StackPanel
+                            x:Name="Buttons"
+                            Grid.Column="4"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal"
+                            Spacing="2">
+                            <Button
+                                x:Name="SplitRightButton"
+                                AutomationProperties.AcceleratorKey="Ctrl+Shift+D"
+                                AutomationProperties.Name="Split right"
+                                Click="SplitRight_Click"
+                                Style="{StaticResource RexPaneHeaderButtonStyle}"
+                                ToolTipService.ToolTip="Split right (Ctrl+Shift+D)">
+                                <PathIcon
+                                    Width="14"
+                                    Height="14"
+                                    Data="{StaticResource RexSplitRightPath}" />
+                            </Button>
+                            <Button
+                                x:Name="SplitDownButton"
+                                AutomationProperties.AcceleratorKey="Ctrl+Shift+E"
+                                AutomationProperties.Name="Split down"
+                                Click="SplitDown_Click"
+                                Style="{StaticResource RexPaneHeaderButtonStyle}"
+                                ToolTipService.ToolTip="Split down (Ctrl+Shift+E)">
+                                <PathIcon
+                                    Width="14"
+                                    Height="14"
+                                    Data="{StaticResource RexSplitDownPath}" />
+                            </Button>
+                            <Button
+                                x:Name="ZoomButton"
+                                AutomationProperties.AcceleratorKey="Ctrl+Shift+Enter"
+                                AutomationProperties.Name="Zoom pane"
+                                Click="Zoom_Click"
+                                Content="&#xE740;"
+                                Style="{StaticResource RexPaneHeaderButtonStyle}"
+                                ToolTipService.ToolTip="Zoom pane (Ctrl+Shift+Enter)" />
+                            <Button
+                                x:Name="MoreButton"
+                                AutomationProperties.Name="More options"
+                                Click="More_Click"
+                                Content="&#xE712;"
+                                Style="{StaticResource RexPaneHeaderButtonStyle}"
+                                ToolTipService.ToolTip="More options" />
+                            <Button
+                                x:Name="CloseButton"
+                                AutomationProperties.AcceleratorKey="Ctrl+Shift+W"
+                                AutomationProperties.Name="Close pane"
+                                Click="Close_Click"
+                                Content="&#xE711;"
+                                Style="{StaticResource RexPaneHeaderButtonStyle}"
+                                ToolTipService.ToolTip="Close pane (Ctrl+Shift+W)">
+                                <Button.Resources>
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.ThemeDictionaries>
+                                            <ResourceDictionary x:Key="Light">
+                                                <SolidColorBrush x:Key="RexSubtleButtonForegroundPointerOver" Color="#C42B1C" />
+                                            </ResourceDictionary>
+                                            <ResourceDictionary x:Key="Dark">
+                                                <SolidColorBrush x:Key="RexSubtleButtonForegroundPointerOver" Color="#FF99A4" />
+                                            </ResourceDictionary>
+                                            <ResourceDictionary x:Key="HighContrast">
+                                                <SolidColorBrush x:Key="RexSubtleButtonForegroundPointerOver" Color="{ThemeResource SystemColorHighlightTextColor}" />
+                                            </ResourceDictionary>
+                                        </ResourceDictionary.ThemeDictionaries>
+                                    </ResourceDictionary>
+                                </Button.Resources>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Compact pane style: the focused pane's accent line along its top edge. -->
+                <Border
+                    x:Name="FocusLine"
+                    Height="2"
+                    VerticalAlignment="Top"
+                    Background="{ThemeResource RexPaneFocusStrokeBrush}"
+                    IsHitTestVisible="False"
+                    Visibility="Collapsed" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

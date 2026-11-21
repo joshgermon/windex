@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Windex design tokens and styles (docs/design.md §14–15, with the orchestrator's amendments:
+     glass pill tabs on a track, cards directly on the ground). Brushes marked "material" have their
+     colours replaced at runtime by Services/WindowMaterial.cs when the window material changes. -->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="RexPaneCardBrush" Color="#F2FFFFFF" />              <!-- material -->
+            <SolidColorBrush x:Key="RexPaneCardInactiveBrush" Color="#ADFFFFFF" />      <!-- material -->
+            <SolidColorBrush x:Key="RexGroundBrush" Color="Transparent" />              <!-- material -->
+            <SolidColorBrush x:Key="RexPaneStrokeBrush" Color="#12000000" />
+            <SolidColorBrush x:Key="RexPaneFocusedStrokeBrush" Color="#1F000000" />
+            <SolidColorBrush x:Key="RexPaneFocusStrokeBrush" Color="{ThemeResource SystemAccentColorDark1}" Opacity="0.8" />
+            <SolidColorBrush x:Key="RexPaneDimBrush" Color="#4DFAF9FC" />
+            <SolidColorBrush x:Key="RexTabTrackBrush" Color="#0D000000" />
+            <SolidColorBrush x:Key="RexTabSeparatorBrush" Color="#1F000000" />
+            <SolidColorBrush x:Key="RexChipSelectedBrush" Color="#F7FFFFFF" />
+            <LinearGradientBrush x:Key="RexChipStrokeBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#0F000000" />
+                <GradientStop Offset="1" Color="#1A000000" />
+            </LinearGradientBrush>
+            <SolidColorBrush x:Key="RexChipShadowBrush" Color="#0D000000" />
+            <SolidColorBrush x:Key="RexTileRingBrush" Color="#FFF7F5F9" />
+            <SolidColorBrush x:Key="RexSplitterGripBrush" Color="#72000000" />
+            <SolidColorBrush x:Key="RexZoomChipBrush" Color="#0F000000" />
+            <LinearGradientBrush x:Key="RexAuroraBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="#8CF5C6EA" />
+                <GradientStop Offset="0.5" Color="#40EEDCEA" />
+                <GradientStop Offset="1" Color="#8CFFE4A0" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="RexAccentTintBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="{ThemeResource SystemAccentColorLight2}" />
+                <GradientStop Offset="0.5" Color="#00FFFFFF" />
+                <GradientStop Offset="1" Color="{ThemeResource SystemAccentColorDark1}" />
+            </LinearGradientBrush>
+            <!-- Explicit values (not StaticResource aliases) because code resolves these per element theme. -->
+            <SolidColorBrush x:Key="RexCautionBrush" Color="#9D5D00" />
+            <SolidColorBrush x:Key="RexCriticalBrush" Color="#C42B1C" />
+            <SolidColorBrush x:Key="RexSuccessBrush" Color="#0F7B0F" />
+            <SolidColorBrush x:Key="RexAccentBrush" Color="{ThemeResource SystemAccentColorDark1}" />
+            <SolidColorBrush x:Key="RexTextOnAccentBrush" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="RexPrimaryTextBrush" Color="#E4000000" />
+            <SolidColorBrush x:Key="RexSecondaryTextBrush" Color="#9E000000" />
+            <SolidColorBrush x:Key="RexTertiaryTextBrush" Color="#72000000" />
+            <SolidColorBrush x:Key="RexDisabledTextBrush" Color="#5C000000" />
+            <SolidColorBrush x:Key="RexControlFillBrush" Color="#B3FFFFFF" />
+            <SolidColorBrush x:Key="RexSubtleHoverBrush" Color="#09000000" />
+            <SolidColorBrush x:Key="RexPreviewWellBrush" Color="#80F6F6F6" />
+            <SolidColorBrush x:Key="RexSubtleButtonForegroundPointerOver" Color="#E4000000" />
+            <AcrylicBrush x:Key="RexOverlayBrush" FallbackColor="#F9F9F9" TintColor="#FCFCFC" TintLuminosityOpacity="0.85" TintOpacity="0" />
+            <AcrylicBrush x:Key="RexFloatingHeaderBrush" FallbackColor="#F5F5F7" TintColor="#FFFFFF" TintLuminosityOpacity="0.9" TintOpacity="0.4" />
+            <SolidColorBrush x:Key="RexNavGeneralBrush" Color="#5B6B7F" />
+            <SolidColorBrush x:Key="RexNavAppearanceBrush" Color="#C2398F" />
+            <SolidColorBrush x:Key="RexNavTerminalBrush" Color="#1E8E3E" />
+            <SolidColorBrush x:Key="RexNavShortcutsBrush" Color="#6B6B78" />
+            <SolidColorBrush x:Key="RexNavHostsBrush" Color="#6E56CF" />
+            <SolidColorBrush x:Key="RexNavNotificationsBrush" Color="#D13438" />
+            <SolidColorBrush x:Key="RexNavAboutBrush" Color="#0F6CBD" />
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="RexPaneCardBrush" Color="#EB2B2A31" />              <!-- material -->
+            <SolidColorBrush x:Key="RexPaneCardInactiveBrush" Color="#AD2B2A31" />      <!-- material -->
+            <SolidColorBrush x:Key="RexGroundBrush" Color="Transparent" />              <!-- material -->
+            <!-- Glass cards are lit from above: a hairline that fades down the edges. -->
+            <LinearGradientBrush x:Key="RexPaneStrokeBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#21FFFFFF" />
+                <GradientStop Offset="0.35" Color="#12FFFFFF" />
+                <GradientStop Offset="1" Color="#0DFFFFFF" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="RexPaneFocusedStrokeBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#3DFFFFFF" />
+                <GradientStop Offset="0.35" Color="#1FFFFFFF" />
+                <GradientStop Offset="1" Color="#14FFFFFF" />
+            </LinearGradientBrush>
+            <SolidColorBrush x:Key="RexPaneFocusStrokeBrush" Color="{ThemeResource SystemAccentColorLight2}" Opacity="0.7" />
+            <SolidColorBrush x:Key="RexPaneDimBrush" Color="#40000000" />
+            <SolidColorBrush x:Key="RexTabTrackBrush" Color="#12FFFFFF" />
+            <SolidColorBrush x:Key="RexTabSeparatorBrush" Color="#24FFFFFF" />
+            <SolidColorBrush x:Key="RexChipSelectedBrush" Color="#21FFFFFF" />
+            <LinearGradientBrush x:Key="RexChipStrokeBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0" Color="#38FFFFFF" />
+                <GradientStop Offset="1" Color="#0FFFFFFF" />
+            </LinearGradientBrush>
+            <SolidColorBrush x:Key="RexChipShadowBrush" Color="#26000000" />
+            <SolidColorBrush x:Key="RexTileRingBrush" Color="#FF2A2930" />
+            <SolidColorBrush x:Key="RexSplitterGripBrush" Color="#8BFFFFFF" />
+            <SolidColorBrush x:Key="RexZoomChipBrush" Color="#14FFFFFF" />
+            <LinearGradientBrush x:Key="RexAuroraBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="#4D7B4F8F" />
+                <GradientStop Offset="0.5" Color="#24604858" />
+                <GradientStop Offset="1" Color="#40A06A3A" />
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Key="RexAccentTintBrush" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="{ThemeResource SystemAccentColorLight2}" />
+                <GradientStop Offset="0.5" Color="#00000000" />
+                <GradientStop Offset="1" Color="{ThemeResource SystemAccentColorDark1}" />
+            </LinearGradientBrush>
+            <!-- Explicit values (not StaticResource aliases) because code resolves these per element theme. -->
+            <SolidColorBrush x:Key="RexCautionBrush" Color="#FCE100" />
+            <SolidColorBrush x:Key="RexCriticalBrush" Color="#FF99A4" />
+            <SolidColorBrush x:Key="RexSuccessBrush" Color="#6CCB5F" />
+            <SolidColorBrush x:Key="RexAccentBrush" Color="{ThemeResource SystemAccentColorLight2}" />
+            <SolidColorBrush x:Key="RexTextOnAccentBrush" Color="#FF000000" />
+            <SolidColorBrush x:Key="RexPrimaryTextBrush" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="RexSecondaryTextBrush" Color="#C5FFFFFF" />
+            <SolidColorBrush x:Key="RexTertiaryTextBrush" Color="#87FFFFFF" />
+            <SolidColorBrush x:Key="RexDisabledTextBrush" Color="#5DFFFFFF" />
+            <SolidColorBrush x:Key="RexControlFillBrush" Color="#0FFFFFFF" />
+            <SolidColorBrush x:Key="RexSubtleHoverBrush" Color="#0FFFFFFF" />
+            <SolidColorBrush x:Key="RexPreviewWellBrush" Color="#08FFFFFF" />
+            <SolidColorBrush x:Key="RexSubtleButtonForegroundPointerOver" Color="#FFFFFFFF" />
+            <AcrylicBrush x:Key="RexOverlayBrush" FallbackColor="#2C2C2C" TintColor="#2C2C2C" TintLuminosityOpacity="0.96" TintOpacity="0.15" />
+            <AcrylicBrush x:Key="RexFloatingHeaderBrush" FallbackColor="#2E2D33" TintColor="#2B2A31" TintLuminosityOpacity="0.92" TintOpacity="0.5" />
+            <SolidColorBrush x:Key="RexNavGeneralBrush" Color="#A3B1C4" />
+            <SolidColorBrush x:Key="RexNavAppearanceBrush" Color="#F28AC9" />
+            <SolidColorBrush x:Key="RexNavTerminalBrush" Color="#5FD38D" />
+            <SolidColorBrush x:Key="RexNavShortcutsBrush" Color="#B9B9C6" />
+            <SolidColorBrush x:Key="RexNavHostsBrush" Color="#AE9EF5" />
+            <SolidColorBrush x:Key="RexNavNotificationsBrush" Color="#FF8A8E" />
+            <SolidColorBrush x:Key="RexNavAboutBrush" Color="#6CB0FF" />
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="HighContrast">
+            <SolidColorBrush x:Key="RexPaneCardBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="RexPaneCardInactiveBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="RexGroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="RexPaneStrokeBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexPaneFocusedStrokeBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexPaneFocusStrokeBrush" Color="{ThemeResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="RexPaneDimBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="RexTabTrackBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="RexTabSeparatorBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexChipSelectedBrush" Color="{ThemeResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="RexChipStrokeBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexChipShadowBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="RexTileRingBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="RexSplitterGripBrush" Color="{ThemeResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="RexZoomChipBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="RexAuroraBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="RexAccentTintBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="RexCautionBrush" Color="{ThemeResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="RexCriticalBrush" Color="{ThemeResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="RexSuccessBrush" Color="{ThemeResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="RexAccentBrush" Color="{ThemeResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="RexTextOnAccentBrush" Color="{ThemeResource SystemColorHighlightTextColor}" />
+            <SolidColorBrush x:Key="RexPrimaryTextBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexSecondaryTextBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexTertiaryTextBrush" Color="{ThemeResource SystemColorGrayTextColor}" />
+            <SolidColorBrush x:Key="RexDisabledTextBrush" Color="{ThemeResource SystemColorGrayTextColor}" />
+            <SolidColorBrush x:Key="RexControlFillBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
+            <SolidColorBrush x:Key="RexSubtleHoverBrush" Color="{ThemeResource SystemColorHighlightColor}" />
+            <SolidColorBrush x:Key="RexPreviewWellBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="RexSubtleButtonForegroundPointerOver" Color="{ThemeResource SystemColorHighlightTextColor}" />
+            <SolidColorBrush x:Key="RexOverlayBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="RexFloatingHeaderBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="RexNavGeneralBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexNavAppearanceBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexNavTerminalBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexNavShortcutsBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexNavHostsBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexNavNotificationsBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+            <SolidColorBrush x:Key="RexNavAboutBrush" Color="{ThemeResource SystemColorWindowTextColor}" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <!-- Geometry (Rex Mac proportions: 12 epx cards and pills on an 8 epx grid) -->
+    <x:Double x:Key="RexTitleBarHeight">48</x:Double>
+    <x:Double x:Key="RexPaneHeaderHeight">36</x:Double>
+    <x:Double x:Key="RexPaneGap">8</x:Double>
+    <Thickness x:Key="RexPaneAreaPadding">8</Thickness>
+    <CornerRadius x:Key="RexCardCornerRadius">12</CornerRadius>
+    <!-- Flyouts, menus, dialogs, teaching tips and the palette share the cards' rounder corners
+         (WinUI's default is 8). Controls keep ControlCornerRadius (4). -->
+    <CornerRadius x:Key="OverlayCornerRadius">12</CornerRadius>
+
+    <!-- Authored icons (16x16; EvenOdd gives 1 epx outlines) -->
+    <x:String x:Key="RexSplitRightPath">F0 M3,2 H13 A2,2 0 0 1 15,4 V12 A2,2 0 0 1 13,14 H3 A2,2 0 0 1 1,12 V4 A2,2 0 0 1 3,2 Z M3,3 A1,1 0 0 0 2,4 V12 A1,1 0 0 0 3,13 H7.5 V3 Z M8.5,3 H13 A1,1 0 0 1 14,4 V12 A1,1 0 0 1 13,13 H8.5 Z</x:String>
+    <x:String x:Key="RexSplitDownPath">F0 M3,2 H13 A2,2 0 0 1 15,4 V12 A2,2 0 0 1 13,14 H3 A2,2 0 0 1 1,12 V4 A2,2 0 0 1 3,2 Z M3,3 A1,1 0 0 0 2,4 V7.5 H14 V4 A1,1 0 0 0 13,3 Z M2,8.5 V12 A1,1 0 0 0 3,13 H13 A1,1 0 0 0 14,12 V8.5 Z</x:String>
+
+    <!-- A subtle button: transparent at rest, subtle fills on hover/press (title bar, headers, chips). -->
+    <Style x:Key="RexSubtleButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="FocusVisualMargin" Value="-2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter
+                        x:Name="ContentPresenter"
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                        AutomationProperties.AccessibilityView="Raw"
+                        Background="{TemplateBinding Background}"
+                        BackgroundSizing="{TemplateBinding BackgroundSizing}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                        ContentTransitions="{TemplateBinding ContentTransitions}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        FontFamily="{TemplateBinding FontFamily}"
+                        FontSize="{TemplateBinding FontSize}"
+                        Foreground="{TemplateBinding Foreground}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Background" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource RexSubtleButtonForegroundPointerOver}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Background" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </ContentPresenter>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="RexTitleBarButtonStyle" TargetType="Button" BasedOn="{StaticResource RexSubtleButtonStyle}">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="AllowFocusOnInteraction" Value="False" />
+    </Style>
+
+    <!-- Rex Mac's header controls: thin glyphs on small round-cornered hit targets. -->
+    <Style x:Key="RexPaneHeaderButtonStyle" TargetType="Button" BasedOn="{StaticResource RexSubtleButtonStyle}">
+        <Setter Property="Width" Value="26" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="AllowFocusOnInteraction" Value="False" />
+        <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+    </Style>
+
+    <Style x:Key="RexIdentityChipStyle" TargetType="Button" BasedOn="{StaticResource RexSubtleButtonStyle}">
+        <Setter Property="Height" Value="40" />
+        <Setter Property="MinWidth" Value="140" />
+        <Setter Property="MaxWidth" Value="240" />
+        <Setter Property="Padding" Value="8,0,8,0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+    </Style>
+
+    <Style x:Key="RexCriticalButtonStyle" TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource SystemFillColorCriticalBrush}" />
+    </Style>
+
+    <Style x:Key="RexKeycapStyle" TargetType="Border">
+        <Setter Property="Height" Value="20" />
+        <Setter Property="MinWidth" Value="22" />
+        <Setter Property="Padding" Value="6,0" />
+        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="Background" Value="{ThemeResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1,1,1,2" />
+    </Style>
+
+    <Style x:Key="RexKeycapTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="RexTabLabelTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="MaxLines" Value="1" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+    </Style>
+
+    <Style x:Key="RexActivityWordTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+    </Style>
+
+    <!-- Rex Mac's pane titles are heavy (SF Pro Semibold reads as Segoe UI Variable Bold). -->
+    <Style x:Key="RexPaneTitleTextStyle" TargetType="TextBlock" BasedOn="{StaticResource RexTabLabelTextStyle}">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <!-- Inline rename box: same height and font as the label it replaces. -->
+    <Style x:Key="RexInlineRenameTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource DefaultTextBoxStyle}">
+        <Setter Property="MinHeight" Value="24" />
+        <Setter Property="Padding" Value="6,2,6,2" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- Rex-style glass pill tabs (amendment 1) on a shared track (MainWindow's TabTrack). Keeps
+         TabViewItem's named parts (ContentPresenter, CloseButton) and its visual-state names so
+         TabView's behaviour stays. The separator between two unselected pills is shown by
+         MainWindow (it depends on the neighbour); the states hide it under hover and selection. -->
+    <Style x:Key="RexPillTabStyle" TargetType="TabViewItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="FocusVisualMargin" Value="0,8,0,8" />
+        <Setter Property="MinHeight" Value="48" />
+        <Setter Property="Padding" Value="1,0,1,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabViewItem">
+                    <Grid x:Name="LayoutRoot" Padding="{TemplateBinding Padding}" Background="Transparent">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="TabContainer.Background" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
+                                        <Setter Target="CloseButton.Visibility" Value="Visible" />
+                                        <Setter Target="Separator.Visibility" Value="Collapsed" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="TabContainer.Background" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
+                                        <Setter Target="CloseButton.Visibility" Value="Visible" />
+                                        <Setter Target="Separator.Visibility" Value="Collapsed" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="TabContainer.Background" Value="{ThemeResource RexChipSelectedBrush}" />
+                                        <Setter Target="TabContainer.BorderBrush" Value="{ThemeResource RexChipStrokeBrush}" />
+                                        <Setter Target="ChipShadow.Visibility" Value="Visible" />
+                                        <Setter Target="CloseButton.Visibility" Value="Visible" />
+                                        <Setter Target="Separator.Visibility" Value="Collapsed" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PointerOverSelected">
+                                    <VisualState.Setters>
+                                        <Setter Target="TabContainer.Background" Value="{ThemeResource RexChipSelectedBrush}" />
+                                        <Setter Target="TabContainer.BorderBrush" Value="{ThemeResource RexChipStrokeBrush}" />
+                                        <Setter Target="ChipShadow.Visibility" Value="Visible" />
+                                        <Setter Target="CloseButton.Visibility" Value="Visible" />
+                                        <Setter Target="Separator.Visibility" Value="Collapsed" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PressedSelected">
+                                    <VisualState.Setters>
+                                        <Setter Target="TabContainer.Background" Value="{ThemeResource RexChipSelectedBrush}" />
+                                        <Setter Target="TabContainer.BorderBrush" Value="{ThemeResource RexChipStrokeBrush}" />
+                                        <Setter Target="ChipShadow.Visibility" Value="Visible" />
+                                        <Setter Target="CloseButton.Visibility" Value="Visible" />
+                                        <Setter Target="Separator.Visibility" Value="Collapsed" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="DisabledStates">
+                                <VisualState x:Name="Enabled" />
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="DragStates">
+                                <VisualState x:Name="NotDragging" />
+                                <VisualState x:Name="Dragging">
+                                    <VisualState.Setters>
+                                        <Setter Target="LayoutRoot.Opacity" Value="0.6" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="DraggingTarget" />
+                                <VisualState x:Name="MultipleDraggingPrimary" />
+                                <VisualState x:Name="MultipleDraggingSecondary" />
+                                <VisualState x:Name="DraggedPlaceholder" />
+                                <VisualState x:Name="Reordering">
+                                    <VisualState.Setters>
+                                        <Setter Target="LayoutRoot.Opacity" Value="0.8" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="ReorderingTarget" />
+                                <VisualState x:Name="MultipleReorderingPrimary" />
+                                <VisualState x:Name="ReorderedPlaceholder">
+                                    <VisualState.Setters>
+                                        <Setter Target="LayoutRoot.Opacity" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="DragOver" />
+                            </VisualStateGroup>
+
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border
+                            x:Name="Separator"
+                            Width="1"
+                            Height="16"
+                            Margin="0,0,-1.5,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="{ThemeResource RexTabSeparatorBrush}"
+                            IsHitTestVisible="False"
+                            Opacity="0" />
+                        <Border
+                            x:Name="ChipShadow"
+                            Height="32"
+                            Margin="0,2,0,0"
+                            VerticalAlignment="Center"
+                            Background="{ThemeResource RexChipShadowBrush}"
+                            CornerRadius="12"
+                            Visibility="Collapsed" />
+                        <Grid
+                            x:Name="TabContainer"
+                            Height="32"
+                            Padding="9,0,4,0"
+                            VerticalAlignment="Center"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="Transparent"
+                            BorderThickness="1"
+                            Control.IsTemplateFocusTarget="True"
+                            CornerRadius="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Stretch"
+                                Content=""
+                                ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                FontSize="13"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                HighContrastAdjustment="None" />
+                            <Button
+                                x:Name="CloseButton"
+                                Grid.Column="1"
+                                Visibility="Collapsed"
+                                Width="22"
+                                Height="22"
+                                Margin="4,0,1,0"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="Close tab"
+                                Content="&#xE711;"
+                                CornerRadius="7"
+                                FontSize="10"
+                                IsTabStop="False"
+                                IsTextScaleFactorEnabled="False"
+                                Style="{StaticResource RexSubtleButtonStyle}"
+                                FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Sidebar and palette rows: compact ListViewItems keeping the standard selection pill. -->
+    <Style x:Key="RexCompactListViewItemStyle" TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Padding" Value="8,0,6,0" />
+        <Setter Property="Margin" Value="0,1,0,1" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    </Style>
+</ResourceDictionary>

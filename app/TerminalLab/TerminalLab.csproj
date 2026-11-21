@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Test harness for Windex.Terminal.TerminalView: compiles the terminal, interop and core service
+       sources from ../Windex as linked files and runs them against local (demo) panes. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <RootNamespace>TerminalLab</RootNamespace>
+    <AssemblyName>TerminalLab</AssemblyName>
+    <Platforms>x64</Platforms>
+    <Platform>x64</Platform>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <SelfContained>true</SelfContained>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.7.0" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
+    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.251219" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.2.251219" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Windex\Terminal\**\*.cs" Link="Terminal\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\Windex\Interop\**\*.cs" Link="Interop\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\Windex\Core\ICore.cs;..\Windex\Core\NativeCore.cs;..\Windex\Core\Model.cs" Link="Core\%(Filename)%(Extension)" />
+  </ItemGroup>
+  <!-- A frozen rexcore.dll (the core is rebuilt concurrently in core/target) and the bundled fonts. -->
+  <ItemGroup>
+    <None Include="..\..\artifacts\rexcore-snapshot\rexcore.dll" Link="rexcore.dll" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\Windex\Assets\Fonts\**" Link="Assets\Fonts\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

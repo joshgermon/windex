@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings (design §9.11): its own Mica window, WinUI TitleBar, NavigationView, SettingsCards. -->
+<Window
+    x:Class="Windex.Settings.SettingsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Settings – Windex">
+    <Window.SystemBackdrop>
+        <MicaBackdrop Kind="Base" />
+    </Window.SystemBackdrop>
+
+    <Grid x:Name="Root">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TitleBar x:Name="AppTitleBar" Title="Settings">
+            <TitleBar.IconSource>
+                <ImageIconSource x:Name="TitleIcon" />
+            </TitleBar.IconSource>
+        </TitleBar>
+
+        <NavigationView
+            x:Name="Nav"
+            Grid.Row="1"
+            IsBackButtonVisible="Collapsed"
+            IsPaneToggleButtonVisible="False"
+            IsSettingsVisible="False"
+            OpenPaneLength="260"
+            PaneDisplayMode="Left"
+            SelectionChanged="Nav_SelectionChanged">
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox
+                    x:Name="SettingsSearch"
+                    AutomationProperties.Name="Search settings"
+                    PlaceholderText="Search settings"
+                    QueryIcon="Find"
+                    QuerySubmitted="SettingsSearch_QuerySubmitted"
+                    SuggestionChosen="SettingsSearch_SuggestionChosen"
+                    TextChanged="SettingsSearch_TextChanged" />
+            </NavigationView.AutoSuggestBox>
+            <NavigationView.MenuItems>
+                <!-- Colour-coded glyphs, as in Windows 11 Settings (and Rex Mac's coloured tiles). -->
+                <NavigationViewItem Content="General" Tag="general">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Foreground="{ThemeResource RexNavGeneralBrush}" Glyph="&#xE713;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Appearance" Tag="appearance">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Foreground="{ThemeResource RexNavAppearanceBrush}" Glyph="&#xE771;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Terminal" Tag="terminal">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Foreground="{ThemeResource RexNavTerminalBrush}" Glyph="&#xE756;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Shortcuts" Tag="shortcuts">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Foreground="{ThemeResource RexNavShortcutsBrush}" Glyph="&#xEDA7;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Remote hosts" Tag="hosts">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Foreground="{ThemeResource RexNavHostsBrush}" Glyph="&#xE968;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Notifications" Tag="notifications">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Foreground="{ThemeResource RexNavNotificationsBrush}" Glyph="&#xEA8F;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="About" Tag="about">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Foreground="{ThemeResource RexNavAboutBrush}" Glyph="&#xE946;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <ScrollViewer x:Name="Scroller" VerticalScrollBarVisibility="Auto">
+                <ContentControl
+                    x:Name="PageHost"
+                    MaxWidth="1000"
+                    Padding="36,24,36,36"
+                    HorizontalContentAlignment="Stretch"
+                    IsTabStop="False">
+                    <ContentControl.ContentTransitions>
+                        <TransitionCollection>
+                            <EntranceThemeTransition FromVerticalOffset="28" />
+                        </TransitionCollection>
+                    </ContentControl.ContentTransitions>
+                </ContentControl>
+            </ScrollViewer>
+        </NavigationView>
+    </Grid>
+</Window>
